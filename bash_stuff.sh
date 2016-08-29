@@ -1,7 +1,6 @@
 #####################
 ###### VARS #########
 #####################
-local="bbo1t.local"
 dev=~/dev
 proj=$dev/audience-stream
 
@@ -16,7 +15,7 @@ stty -ixon
 #####################
 function editprofile
 {
-  atom $CONF_HOME/mlacroix.sh ~/.bash_aliases &
+  atom $CONF_HOME/bash_stuff.sh ~/.bash_aliases ~/dev/scripts/pj.sh &
 }
 
 function git_oops
@@ -24,6 +23,7 @@ function git_oops
   git add "$@"
   git commit --amend -C HEAD
 }
+alias git_double_oops='git reset --soft HEAD@{1}'
 
 function git_force_reset
 {
@@ -35,6 +35,12 @@ function git_force_reset
     git reset --hard origin/master
     git clean -fdx
   fi
+}
+
+function gss
+{
+  branch_name=`git rev-parse --abbrev-ref HEAD`
+  git stash save "$branch_name - working"
 }
 
 function plantuml
@@ -62,7 +68,7 @@ function merguez
 }
 
 
-export PS1='\[$(tput bold)\]\[\033[38;5;202m\]\u\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\] [\[$(tput sgr0)\]\[\033[38;5;211m\]${newPWD}\[\033[38;5;15m\]]$(__git_ps1 " \[\033[1;34m\]{%s}")\[$(tput sgr0)\]\[\033[38;5;15m\]\[$(tput sgr0)\]\[\033[38;5;10m\] >:\[\033[38;5;15m\]'
+export PS1='\[$(tput bold)\]\[\033[38;5;202m\]\u\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\] [\[$(tput sgr0)\]\[\033[38;5;211m\]${newPWD}\[\033[38;5;15m\]]$(__git_ps1 " \[\033[1;34m\]{%s}")\[$(tput sgr0)\]\[\033[38;5;15m\]\[$(tput sgr0)\]\[\033[38;5;10m\]>> \[\033[38;5;15m\]'
 
 #####################
 ###### ALIAS ########
@@ -76,3 +82,5 @@ alias fuuu='fuuuu'
 alias fuuuuu='fuuuu'
 alias cls='clear'
 alias psgrep='merguez'
+alias gsp='git stash pop'
+alias lll='ll'
