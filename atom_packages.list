@@ -5,4 +5,5 @@ emmet-atom
 language-plantuml
 language-scala
 seti-ui
-
+file-watcher
+keybinding-cheatsheet
