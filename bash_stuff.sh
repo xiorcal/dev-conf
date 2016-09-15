@@ -1,13 +1,12 @@
 #####################
 ###### VARS #########
 #####################
-dev=~/dev
-proj=$dev/audience-stream
+
 export NO_PROXY=localhost
+
 #####################
 ###### CONF #########
 #####################
-stty -ixon
 
 
 #####################
@@ -24,6 +23,15 @@ function openTunnel {
     echo "Establishing a tunnel to $remoteHost:$remotePort ($tunnelName) on the local port $localPort..."
     ssh -NfL $localPort:$remoteHost:$remotePort $(whoami)@bigdatabatch03g.be3.local
   fi
+}
+function tunnels {
+  grep "openTunnel" ~/dev/scripts/pj.sh | while read -r line ; do
+    args=$(echo $line | xargs -n 1)
+    printf "%s\n" "$(echo $args|sed '2q;d') ($(echo $args|sed '4q;d'):$(echo $args|sed '5q;d')) on $(echo $args|sed '3q;d')"
+  done
+}
+function openTunnel {
+
 }
 function editprofile
 {
@@ -94,23 +102,12 @@ function merguez
 }
 
 
-
-# Eternal bash history.
-# ---------------------
-# Undocumented feature which sets the size to "unlimited".
-# http://stackoverflow.com/questions/9457233/unlimited-bash-history
-export HISTFILESIZE=
-export HISTSIZE=
-export HISTTIMEFORMAT="[%F %T] "
-# Change the file location because certain bash sessions truncate .bash_history file upon close.
-# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
-export HISTFILE=~/.bash_eternal_history
-# Force prompt to write history after every command.
-# http://superuser.com/questions/20900/bash-history-loss
+HISTTIMEFORMAT="[%F %T] "
+HISTFILE=~/.zsh_history
+HISTSIZE=999999999
+SAVEHIST=$HISTSIZE
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
-
-export PS1='\[$(tput bold)\]\[\033[38;5;202m\]\u\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\] [\[$(tput sgr0)\]\[\033[38;5;211m\]${newPWD}\[\033[38;5;15m\]]$(__git_ps1 " \[\033[1;34m\]{%s}")\[$(tput sgr0)\]\[\033[38;5;15m\]\[$(tput sgr0)\]\[\033[38;5;10m\]>> \[\033[38;5;15m\]'
 
 #####################
 ###### ALIAS ########
