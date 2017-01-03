@@ -1,4 +1,4 @@
-colorscheme darkblue
+colorscheme murphy
 cmap w!! w !sudo tee >/dev/null %
 
 execute pathogen#infect()

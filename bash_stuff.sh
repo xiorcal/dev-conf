@@ -3,6 +3,7 @@
 #####################
 
 export NO_PROXY=localhost
+export CONF_HOME=/home/mlacroix/dev/linux-conf
 
 #####################
 ###### CONF #########
@@ -21,21 +22,8 @@ function openTunnel {
   nc -nz 127.0.0.1 $localPort
   if [ $? -ne 0 ]; then
     echo "Establishing a tunnel to $remoteHost:$remotePort ($tunnelName) on the local port $localPort..."
-    ssh -NfL $localPort:$remoteHost:$remotePort $(whoami)@bigdatabatch03g.be3.local
+    ssh -NfL $localPort:$remoteHost:$remotePort $(whoami)@${TUNNEL_HOST}
   fi
-}
-function tunnels {
-  grep "openTunnel" ~/dev/scripts/pj.sh | while read -r line ; do
-    args=$(echo $line | xargs -n 1)
-    printf "%s\n" "$(echo $args|sed '2q;d') ($(echo $args|sed '4q;d'):$(echo $args|sed '5q;d')) on $(echo $args|sed '3q;d')"
-  done
-}
-function openTunnel {
-
-}
-function editprofile
-{
-  atom $CONF_HOME/bash_stuff.sh ~/.bash_aliases ~/dev/scripts/pj.sh &
 }
 
 function git_oops
@@ -47,34 +35,9 @@ alias git_double_oops='git reset --soft HEAD@{1}'
 
 function git_force_reset
 {
-  read -p "Are you sure? " -n 1 -r
-  echo    # (optional) move to a new line
-  if [[ $REPLY =~ ^[Yy]$ ]]
-  then
     git fetch origin
     git reset --hard origin/master
     git clean -fdx
-  fi
-}
-
-function git_grep
-{
-  # Liste des repertoires sans leurs sous-repertoires
-  repos="$(find * -type d -prune)"
-
-  # Pour chaque repo, recherche dans les log la chaine demandée
-  for repo in ${repos}; do
-    cd ${repo}
-    echo ${repo}
-    git leditp  og --grep=$1
-    cd ..
-  done
-}
-
-function gss
-{
-  branch_name=$(git rev-parse --abbrev-ref HEAD)
-  git stash save "$branch_name - working"
 }
 
 function plantuml
@@ -85,22 +48,63 @@ function plantuml
   xdg-open ${filename}.png
 }
 
-function eclipse
-{
-  $ECLIPSE_HOME/eclipse &
+function epoch {
+  if [ "$#" -eq 0 ]; then
+    date +%s
+  else
+    date -d @"$1"
+  fi
 }
 
-
-function lycos
-{
-  find . -name "$1"
+function ud {
+  if [ "$#" -lt 2 ]; then
+    nb=0
+  else
+    nb=$2
+  fi
+  CMD="import urbandictionary as ud;d=ud.define('$1')[$nb];print d.word+':'+d.definition"
+  python -c "$CMD"
 }
 
-function merguez
-{
-  ps -edf | grep $1
+function upgrade_atom {
+  rm -f /tmp/atom.deb
+  curl -L https://atom.io/download/deb > /tmp/atom.deb
+  sudo dpkg --install /tmp/atom.deb
 }
 
+function urlencode() {
+	echo -n "$1" | perl -MURI::Escape -ne 'print uri_escape($_)'
+}
+
+function google {
+  query=$(urlencode "$*")
+  xdg-open "https://google.fr/search?q=$query"
+}
+
+function ebook {
+  tmp_dir=$(mktemp -d)
+  backup_start_dir=$(pwd)
+
+  # rename
+  for f in "$@"; do
+    cp ${f} ${tmp_dir}
+  done
+  cd ${tmp_dir}
+  # retrait id
+  rename 's/^[^A-Za-z]+//' *
+  rename 's/ *\[eBook\] *//' *
+  rename 'y/A-Z/a-z/' *
+  mv ${tmp_dir}/* ${EBOOK_DIR}
+  rm ${tmp_dir} -rf
+  cd ${backup_start_dir}
+}
+
+function renderMD {
+    temp_file=$(mktemp)
+    pandoc --from markdown_github --to html5 --output ${temp_file} --standalone $1
+    sensible-browser ${temp_file}
+    rm ${temp_file}
+}
 
 HISTTIMEFORMAT="[%F %T] "
 HISTFILE=~/.zsh_history
@@ -112,14 +116,18 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 #####################
 ###### ALIAS ########
 #####################
+alias ll='ls -alhF'
+alias la='ls -A'
+alias l='ls -CF'
+alias atom='atom -a'
+alias eject=''
+alias burp='fortune | cowsay'
+alias histogrep='history | grep '
 alias vi='vim'
 alias w='thunar . &'
 alias b='cd -'
-alias fuuuu='sudo $(history -p \!\!)'
-alias fuu='fuuuu'
-alias fuuu='fuuuu'
-alias fuuuuu='fuuuu'
 alias cls='clear'
-alias psgrep='merguez'
-alias gsp='git stash pop'
 alias lll='ll'
+alias editprofile="atom $CONF_HOME/bash_stuff.sh ~/.bash_aliases ~/dev/scripts/pj.sh ~/.zshrc"
+alias sourceprofile="source ~/.zshrc"
+alias cd..='cd ..'
