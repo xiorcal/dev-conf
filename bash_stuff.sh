@@ -1,3 +1,4 @@
+#!/bin/bash
 #####################
 ###### VARS #########
 #####################
@@ -19,12 +20,14 @@ function openTunnel {
   local remoteHost=$3
   local remotePort=$4
 
-  nc -nz 127.0.0.1 $localPort
-  if [ $? -ne 0 ]; then
+
+  if ! nc -nz 127.0.0.1 "$localPort"; then
     echo "Establishing a tunnel to $remoteHost:$remotePort ($tunnelName) on the local port $localPort..."
-    ssh -NfL $localPort:$remoteHost:$remotePort $(whoami)@${TUNNEL_HOST}
+    ssh -NfL "$localPort":"$remoteHost":"$remotePort" "$(whoami)"@"${TUNNEL_HOST}"
   fi
 }
+
+echoerr() { printf "%s\n" "$*" >&2; }
 
 function git_oops
 {
@@ -35,17 +38,17 @@ alias git_double_oops='git reset --soft HEAD@{1}'
 
 function git_force_reset
 {
-    git fetch origin
-    git reset --hard origin/master
-    git clean -fdx
+  git fetch origin
+  git reset --hard origin/master
+  git clean -fdx
 }
 
 function plantuml
 {
   filename=$1
-  java -jar ~/apps/plantuml.jar $filename
+  java -jar ~/apps/plantuml.jar "$filename"
   filename="${filename%.*}"
-  xdg-open ${filename}.png
+  xdg-open "${filename}.png"
 }
 
 function epoch {
@@ -73,7 +76,7 @@ function upgrade_atom {
 }
 
 function urlencode() {
-	echo -n "$1" | perl -MURI::Escape -ne 'print uri_escape($_)'
+  echo -n "$1" | perl -MURI::Escape -ne 'print uri_escape($_)'
 }
 
 function google {
@@ -82,35 +85,42 @@ function google {
 }
 
 function ebook {
+  if [ -z "$EBOOK_DIR" ]; then
+    echoerr 'EBOOK_DIR is not set'
+    exit 78
+  fi
   tmp_dir=$(mktemp -d)
   backup_start_dir=$(pwd)
 
   # rename
   for f in "$@"; do
-    cp ${f} ${tmp_dir}
+    cp "${f}" "${tmp_dir}"
   done
-  cd ${tmp_dir}
+  cd "${tmp_dir}" || exit
   # retrait id
-  rename 's/^[^A-Za-z]+//' *
-  rename 's/ *\[eBook\] *//' *
-  rename 'y/A-Z/a-z/' *
-  mv ${tmp_dir}/* ${EBOOK_DIR}
-  rm ${tmp_dir} -rf
-  cd ${backup_start_dir}
+  rename 's/^[^A-Za-z]+//' ./*
+  rename 's/ *\[eBook\] *//' ./*
+  rename 'y/A-Z/a-z/' ./*
+  mv "${tmp_dir}"/* "${EBOOK_DIR}"
+  rm "${tmp_dir}" -rf
+  cd "${backup_start_dir}" || exit
+  for f in "$@"; do
+    rm "${f}"
+  done
 }
 
 function renderMD {
-    temp_file=$(mktemp)
-    pandoc --from markdown_github --to html5 --output ${temp_file} --standalone $1
-    sensible-browser ${temp_file}
-    rm ${temp_file}
+  temp_file=$(mktemp)
+  pandoc --from markdown_github --to html5 --output "${temp_file}" --standalone "$1"
+  sensible-browser "${temp_file}"
+  rm "${temp_file}"
 }
 
-HISTTIMEFORMAT="[%F %T] "
-HISTFILE=~/.zsh_history
-HISTSIZE=999999999
-SAVEHIST=$HISTSIZE
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+export HISTTIMEFORMAT="[%F %T] "
+export HISTFILE=~/.zsh_history
+export HISTSIZE=999999999
+export SAVEHIST=$HISTSIZE
+export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 
 #####################
@@ -128,6 +138,11 @@ alias w='thunar . &'
 alias b='cd -'
 alias cls='clear'
 alias lll='ll'
-alias editprofile="atom $CONF_HOME/bash_stuff.sh ~/.bash_aliases ~/dev/scripts/pj.sh ~/.zshrc"
+alias editprofile='atom $CONF_HOME/bash_stuff.sh ~/dev/scripts/pj.sh'
 alias sourceprofile="source ~/.zshrc"
 alias cd..='cd ..'
+alias mdPreview='renderMD'
+alias emptygz='gzip < /dev/null > empty.gz'
+alias meteoB='curl -H "Accept-Language: fr" wttr.in/brest,+france'
+alias meteoR='curl -H "Accept-Language: fr" wttr.in/rennes,+france'
+alias initPy='cp $CHEATSHEETS_DIR/python/empty.py'

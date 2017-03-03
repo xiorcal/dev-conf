@@ -1,0 +1,30 @@
+[core]
+	editor = vim
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    bra = branch -a
+    brr = branch -r
+    lg = log --pretty=format:'%h - %ar - %an - %s %C(bold red)%N%Creset%C(bold green)%d%Creset' --topo-order --graph
+    ssave = stash save
+    spop = stash pop
+    slist = stash list
+    sapply = stash apply
+	dfw = diff --ignore-space-at-eol -b -w --ignore-blank-lines
+	alias = config --get-regexp ^alias\\.
+	meld = difftool -d
+[color]
+	ui = auto
+[push]
+    default = upstream
+	recurseSubmodules = check
+[log]
+	date = relative
+[format]
+	pretty = format:%C(yellow)%H %Cblue%>(12)%ad %Cgreen%<(7)%aN%Cred%d %Creset%s
+[diff]
+	tool = meld
+	mnemonicprefix = true
+[commit]
+	template = ~/.gitmessage
