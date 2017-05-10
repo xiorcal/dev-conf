@@ -5,4 +5,4 @@ Documentation is like sex; when it's good, it's very, very good, and when it's b
 Remember that there is no code faster than no code. -- Taligent's Guide to Designing Programs
 If debugging is the process of removing bugs, then programming must be the process of putting them in. -- Edsger Dijkstra
 If you think good architecture is expensive, try bad architecture. -- Brian Foote and Joseph Yoder
-The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that.
+The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that. -- Clean code

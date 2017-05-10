@@ -1,5 +1,7 @@
 colorscheme murphy
 cmap w!! w !sudo tee >/dev/null %
+map <C-c> "+y
+
 
 execute pathogen#infect()
 syntax on

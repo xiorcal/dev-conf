@@ -2,14 +2,13 @@
 #####################
 ###### VARS #########
 #####################
-
 export NO_PROXY=localhost
 export CONF_HOME=/home/mlacroix/dev/linux-conf
 
 #####################
 ###### CONF #########
 #####################
-
+export EDITOR=vim
 
 #####################
 ##### STUFF #########
@@ -59,6 +58,14 @@ function epoch {
   fi
 }
 
+function atom {
+  if [ "$#" -eq 0 ]; then
+    /usr/bin/atom ~/dev
+  else
+    /usr/bin/atom -a "$@"
+  fi
+}
+
 function ud {
   if [ "$#" -lt 2 ]; then
     nb=0
@@ -73,6 +80,11 @@ function upgrade_atom {
   rm -f /tmp/atom.deb
   curl -L https://atom.io/download/deb > /tmp/atom.deb
   sudo dpkg --install /tmp/atom.deb
+}
+function upgrade_vsc {
+  rm -f /tmp/vsc.deb
+  curl -L https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable > /tmp/vsc.deb
+  sudo dpkg --install /tmp/vsc.deb
 }
 
 function urlencode() {
@@ -129,7 +141,6 @@ export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 alias ll='ls -alhF'
 alias la='ls -A'
 alias l='ls -CF'
-alias atom='/usr/bin/atom -a'
 alias eject=''
 alias burp='fortune | cowsay'
 alias histogrep='history | grep '
@@ -138,7 +149,7 @@ alias w='thunar . &'
 alias b='cd -'
 alias cls='clear'
 alias lll='ll'
-alias editprofile='atom $CONF_HOME/bash_stuff.sh ~/dev/scripts/pj.sh'
+alias editprofile='code $CONF_HOME/bash_stuff.sh ~/dev/scripts/pj.sh'
 alias sourceprofile="source ~/.zshrc"
 alias cd..='cd ..'
 alias mdPreview='renderMD'
