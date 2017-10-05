@@ -1,3 +1,9 @@
+param([string]$target = '')
+
+if($target != ''){
+  [environment]::setEnvironmentVariable('SCOOP','C:\dev\stuff','User')
+}
+    
 iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 set-executionpolicy unrestricted -s cu
 
@@ -7,7 +13,6 @@ scoop install 7zip curl sudo git openssh coreutils grep sed less touch gzip vim
 
 # languages
 scoop install go scala sbt
-
 
 scoop bucket add extras
 # language

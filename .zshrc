@@ -9,8 +9,9 @@ export ZSH=/home/mlacroix/.oh-my-zsh
 ZSH_THEME="powerlevel9k/powerlevel9k"
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir virtualenv vcs)
 
-plugins=(git httpie jsontools sudo notification command-not-found zsh-syntax-highlighting) #zsh-syntax-highlighting must be last!
+plugins=(git httpie jsontools sudo notification command-not-found rust cargo golang python virtualenv virtualenvwrapper zsh-syntax-highlighting) #zsh-syntax-highlighting must be last!
 source $ZSH/oh-my-zsh.sh
 
 znotify[on_complete]='notify-send "${command_name} ended" "elapsed $formatted_elapsed_time." --icon=dialog-information -t 0'

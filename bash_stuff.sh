@@ -13,12 +13,11 @@ export EDITOR=vim
 #####################
 ##### STUFF #########
 #####################
-function openTunnel {
+function openTunnel() {
   local tunnelName=$1
   local localPort=$2
   local remoteHost=$3
   local remotePort=$4
-
 
   if ! nc -nz 127.0.0.1 "$localPort"; then
     echo "Establishing a tunnel to $remoteHost:$remotePort ($tunnelName) on the local port $localPort..."
@@ -28,29 +27,26 @@ function openTunnel {
 
 echoerr() { printf "%s\n" "$*" >&2; }
 
-function git_oops
-{
+function git_oops() {
   git add "$@"
   git commit --amend -C HEAD
 }
 alias git_double_oops='git reset --soft HEAD@{1}'
 
-function git_force_reset
-{
+function git_force_reset() {
   git fetch origin
   git reset --hard origin/master
   git clean -fdx
 }
 
-function plantuml
-{
+function plantuml() {
   filename=$1
   java -jar ~/apps/plantuml.jar "$filename"
   filename="${filename%.*}"
   xdg-open "${filename}.png"
 }
 
-function epoch {
+function epoch() {
   if [ "$#" -eq 0 ]; then
     date +%s
   else
@@ -58,7 +54,7 @@ function epoch {
   fi
 }
 
-function atom {
+function atom() {
   if [ "$#" -eq 0 ]; then
     /usr/bin/atom ~/dev
   else
@@ -66,7 +62,7 @@ function atom {
   fi
 }
 
-function ud {
+function ud() {
   if [ "$#" -lt 2 ]; then
     nb=0
   else
@@ -76,14 +72,14 @@ function ud {
   python -c "$CMD"
 }
 
-function upgrade_atom {
+function upgrade_atom() {
   rm -f /tmp/atom.deb
-  curl -L https://atom.io/download/deb > /tmp/atom.deb
+  curl -L https://atom.io/download/deb >/tmp/atom.deb
   sudo dpkg --install /tmp/atom.deb
 }
-function upgrade_vsc {
+function upgrade_vsc() {
   rm -f /tmp/vsc.deb
-  curl -L https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable > /tmp/vsc.deb
+  curl -L https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable >/tmp/vsc.deb
   sudo dpkg --install /tmp/vsc.deb
 }
 
@@ -91,12 +87,12 @@ function urlencode() {
   echo -n "$1" | perl -MURI::Escape -ne 'print uri_escape($_)'
 }
 
-function google {
+function google() {
   query=$(urlencode "$*")
   xdg-open "https://google.fr/search?q=$query"
 }
 
-function ebook {
+function ebook() {
   if [ -z "$EBOOK_DIR" ]; then
     echoerr 'EBOOK_DIR is not set'
     exit 78
@@ -121,11 +117,48 @@ function ebook {
   done
 }
 
-function renderMD {
+function renderMD() {
   temp_file=$(mktemp)
   pandoc --from markdown_github --to html5 --output "${temp_file}" --standalone "$1"
   sensible-browser "${temp_file}"
   rm "${temp_file}"
+}
+
+function avrocount() {
+  for var in "$@"; do
+    echo "$var : $(avro-tools tojson "$var" 2>/dev/null | wc -l)"
+  done
+}
+
+function roger() {
+  cat <<endOfFuck
+        __   
+       /  \      
+       |  |
+       |  |
+     __|  |__
+    /  |  |  \__ 
+  __|  |  |  |  |
+ /  /        |  |
+ |              |
+ \              |
+  \             /
+   \___________/
+
+endOfFuck
+}
+
+function asciicast2gif() {
+  if [ "$#" -lt 1 ]; then
+    echo "specify at least input file (json record)"
+    return
+  elif [ "$#" -lt 2 ]; then
+    output="$1.gif"
+  else
+    output="$2"
+  fi
+  docker run --rm -v "$PWD:/data" asciinema/asciicast2gif "$1" "$output"
+
 }
 
 export HISTTIMEFORMAT="[%F %T] "
@@ -133,7 +166,6 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=999999999
 export SAVEHIST=$HISTSIZE
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-
 
 #####################
 ###### ALIAS ########
@@ -157,3 +189,4 @@ alias emptygz='gzip < /dev/null > empty.gz'
 alias meteoB='curl -H "Accept-Language: fr" wttr.in/brest,+france'
 alias meteoR='curl -H "Accept-Language: fr" wttr.in/rennes,+france'
 alias initPy='cp $CHEATSHEETS_DIR/python/empty.py'
+alias ps='ps -e -f'
