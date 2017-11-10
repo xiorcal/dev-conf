@@ -3,9 +3,9 @@ param([string]$target = '')
 if($target != ''){
   [environment]::setEnvironmentVariable('SCOOP','C:\dev\stuff','User')
 }
-    
-iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+
 set-executionpolicy unrestricted -s cu
+iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 
 
 # utils
