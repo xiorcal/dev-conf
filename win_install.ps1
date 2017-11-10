@@ -12,13 +12,11 @@ iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 scoop install 7zip curl sudo git openssh coreutils grep sed less touch gzip vim
 
 # languages
-scoop install go scala sbt
+scoop install go scala sbt openjdk
 
 scoop bucket add extras
-# language
-scoop install oraclejdk
 
 # tools
-scoop install pandoc vscode vlc keepass firefox
+scoop install pandoc plantuml vscode vlc keepass firefox
 
 echo "Raf : cloudstation, keepass-http"
