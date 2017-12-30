@@ -1,22 +1,22 @@
 param([string]$target = '')
 
-if($target != ''){
-  [environment]::setEnvironmentVariable('SCOOP','C:\dev\stuff','User')
+if ($target -ne '') {
+  [environment]::setEnvironmentVariable('SCOOP', $target, 'User')
 }
 
 set-executionpolicy unrestricted -s cu
-iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+Invoke-Expression (new-object net.webclient).downloadstring('https://get.scoop.sh')
 
 
 # utils
 scoop install 7zip curl sudo git openssh coreutils grep sed less touch gzip vim
 
 # languages
-scoop install go scala sbt openjdk
+scoop install go openjdk scala sbt
 
 scoop bucket add extras
 
 # tools
 scoop install pandoc plantuml vscode vlc keepass firefox
 
-echo "Raf : cloudstation, keepass-http"
+Write-Output "Raf : cloudstation, keepass-http"
