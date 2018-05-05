@@ -1,5 +1,7 @@
 Import-Module AudioDeviceCmdlets
 
+# nedds this : https://github.com/frgnca/AudioDeviceCmdlets
+
 $current = Get-DefaultAudioDevice
 $all = Get-AudioDeviceList
 
