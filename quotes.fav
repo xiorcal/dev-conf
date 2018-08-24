@@ -1,5 +1,5 @@
 make it run,make it right, make it fast, make it small. -- Kent Beck
-Give me six hours to chop down a tree and I will spend the first four sharpening the axe. -- Abraham Lincoln
+Give me six hours to chop down a tree and I will spend the first four sharpening the axe. -- Unknow
 Any fool can write code that a computer can understand. Good programmers write code that humans can understand. -- Martin Fowler
 Documentation is like sex; when it's good, it's very, very good, and when it's bad, it's better than nothing. -- Dick Brandon 
 Remember that there is no code faster than no code. -- Taligent's Guide to Designing Programs
@@ -7,3 +7,4 @@ If debugging is the process of removing bugs, then programming must be the proce
 If you think good architecture is expensive, try bad architecture. -- Brian Foote and Joseph Yoder
 The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that. -- Clean code
 There are 2 hard problems in computer science: cache invalidation, naming things, and off-by-1 errors. -- Leon Bambrick
+The first rule of any technology used in a business is that automation applied to an efficient operation will magnify the efficiency. The second is that automation applied to an inefficient operation will magnify the inefficiency. -- Bill Gates 
