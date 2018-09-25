@@ -1,1 +1,1 @@
-# linux-conf
+# Various conf/utility files
