@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+function usage() {
+	cat <<USAGE
+launcher script for various apps; 
+use as follow:
+$(basename "$0") phone_ctrl 
+see also '$(basename "$0") cmd help' to get detailed help about a specific command
+USAGE
+}
+
+function phone_ctrl() {
+	cmd="$1"
+	shift
+	case $cmd in
+	help | h)
+		cat <<USAGE
+usage :
+$(basename "$0") phone_ctrl 
+  vol [0-15] : sets volume to specified value
+  vol + : increase volume
+  vol - : decrease volume
+  p : play/pause media
+  pn : play next media
+  pp : play previous media
+  help : display this message
+USAGE
+		;;
+	vol)
+		case $1 in
+		[0-9] | 1[0-5])
+			adb shell media volume --show --stream 3 --set "$1" >/dev/null
+			;;
+		r | R | u | U | +)
+			adb shell media volume --show --adj raise >/dev/null
+			;;
+		l | L | d | D | -)
+			adb shell media volume --show --adj lower >/dev/null
+			;;
+		esac
+		;;
+	p | play | pause | play-pause)
+		adb shell media dispatch play-pause >/dev/null
+		;;
+	next | pn)
+		adb shell media dispatch next >/dev/null
+		;;
+	previous | pp)
+		adb shell media dispatch previous >/dev/null
+		;;
+	*)
+
+		notify-send "Can't do that with your phone."
+		;;
+	esac
+
+}
+
+## Main
+if [ $# -gt 0 ]; then
+	# shellcheck source=/dev/null
+	source ${HOME}/bin/env.conf
+
+	cmd="$1"
+	shift
+	case $cmd in
+	phone_ctrl)
+		phone_ctrl "$@"
+		;;
+	help | h)
+		usage
+		;;
+	*)
+		notify-send "invalid command,
+see \"$(basename "$0") help\"
+for available commands"
+
+		;;
+	esac
+
+fi
